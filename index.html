@@ -15,9 +15,10 @@
         
         .content { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .card { background-color: var(--tg-theme-secondary-bg-color, #27272a); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
-        .card-img { width: 100%; height: 150px; object-fit: contain; background: #1e1e1e; }
+        .card-img { width: 100%; height: 140px; object-fit: contain; background: #1e1e1e; }
         .card-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
         
+        .card-car { font-size: 13px; font-weight: bold; color: #f59e0b; margin-bottom: 2px; } /* Желтый цвет для марки авто */
         .card-title { font-size: 16px; font-weight: bold; color: var(--tg-theme-text-color, #ffffff); }
         .card-oem { font-size: 12px; color: var(--tg-theme-hint-color, #a1a1aa); }
         .card-price { font-size: 18px; font-weight: bold; color: #22c55e; }
@@ -47,7 +48,6 @@
         tg.expand(); 
         let allAds = []; 
 
-        // Убедись, что ссылка на твой Render правильная
         const API_URL = 'https://autobazar-a22p.onrender.com/api/ads';
 
         async function fetchAds() {
@@ -80,13 +80,12 @@
             filtered.forEach(ad => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                
-                // Если фото есть (photo_url не пустой) - показываем его. Если нет - заглушку.
                 const imgSrc = ad.photo_url ? ad.photo_url : "https://cdn-icons-png.flaticon.com/512/3202/3202926.png";
                 
                 card.innerHTML = `
                     <img src="${imgSrc}" class="card-img" alt="Запчасть">
                     <div class="card-body">
+                        <div class="card-car">🚘 ${ad.car_info}</div>
                         <span class="card-cat">${ad.category}</span>
                         <div class="card-title">${ad.name}</div>
                         <div class="card-oem">OEM: ${ad.oem}</div>
