@@ -131,10 +131,10 @@
                 card.className = 'card';
                 card.style.animationDelay = `${index * 0.05}s`; 
                 
-                // ЗАЩИТА ОТ ПУСТЫХ ДАННЫХ (если null, подставим заглушки)
                 const imgSrc = ad.photo_url ? ad.photo_url : "https://cdn-icons-png.flaticon.com/512/3202/3202926.png";
                 const carText = ad.car_info ? ad.car_info : 'Авто не указано';
                 const priceText = ad.price ? ad.price : '0';
+                const safeUsername = ad.username ? ad.username : ''; // Берем юзернейм
                 
                 card.innerHTML = `
                     <div class="img-container">
@@ -147,7 +147,7 @@
                         <div class="card-oem">OEM: ${ad.oem}</div>
                         <div class="card-price-row">
                             <div class="card-price">${priceText} ₴</div>
-                            <button class="contact-btn" onclick="event.stopPropagation(); openChat(${ad.user_id})">💬 Чат</button>
+                            <button class="contact-btn" onclick="event.stopPropagation(); openChat(${ad.user_id}, '${safeUsername}')">💬 Чат</button>
                         </div>
                     </div>
                 `;
@@ -155,16 +155,18 @@
             });
         }
 
-        // Улучшенная функция открытия чата
-        function openChat(userId) {
-            if (userId && userId !== 0) {
+        // Обновленная функция открытия чата (сначала по юзернейму, потом по ID)
+        function openChat(userId, username) {
+            if (username && username !== 'null' && username !== '') {
+                tg.openTelegramLink(`https://t.me/${username}`);
+            } else if (userId && userId !== 0) {
                 try {
                     tg.openTelegramLink(`tg://user?id=${userId}`);
                 } catch (e) {
                     tg.showAlert("Не удалось открыть чат. Возможно, у продавца закрыты личные сообщения.");
                 }
             } else {
-                tg.showAlert("Контакты этого продавца недоступны (это старое тестовое объявление).");
+                tg.showAlert("Контакты этого продавца недоступны.");
             }
         }
 
